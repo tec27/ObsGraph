@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObsGraph", "ObsGraph\ObsGraph.vcproj", "{D5A3D297-C48A-491E-9D8E-F1F41627DED3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5A3D297-C48A-491E-9D8E-F1F41627DED3}.Debug|Win32.ActiveCfg = Release|Win32
+		{D5A3D297-C48A-491E-9D8E-F1F41627DED3}.Debug|Win32.Build.0 = Release|Win32
+		{D5A3D297-C48A-491E-9D8E-F1F41627DED3}.Release|Win32.ActiveCfg = Release|Win32
+		{D5A3D297-C48A-491E-9D8E-F1F41627DED3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,485 @@
+=========================================================================================================================================================================
+0041D930 >/$ 55             PUSH EBP                                 ;  InitDDraw
+0041D931  |. 8BEC           MOV EBP,ESP
+0041D933  |. 81EC 6C040000  SUB ESP,46C
+0041D939  |. A1 B0BF5100    MOV EAX,DWORD PTR DS:[<SC HWND>]
+0041D93E  |. 53             PUSH EBX
+0041D93F  |. 56             PUSH ESI
+0041D940  |. 57             PUSH EDI
+0041D941  |. 6A 01          PUSH 1                                   ; /ShowState = SW_SHOWNORMAL
+0041D943  |. 50             PUSH EAX                                 ; |hWnd => 001207CE ('Brood War',class='SWarClass')
+0041D944  |. FF15 80E34F00  CALL DWORD PTR DS:[<&USER32.ShowWindow>] ; \ShowWindow
+0041D94A  |. A1 045E6D00    MOV EAX,DWORD PTR DS:[6D5E04]
+0041D94F  |. 85C0           TEST EAX,EAX
+0041D951  |. 75 2F          JNZ SHORT StarCraf.0041D982
+0041D953  |. 68 445F5000    PUSH StarCraf.00505F44                   ; /FileName = "ddraw.dll"
+0041D958  |. FF15 E4E14F00  CALL DWORD PTR DS:[<&KERNEL32.LoadLibrar>; \LoadLibraryA
+0041D95E  |. 85C0           TEST EAX,EAX
+0041D960  |. A3 045E6D00    MOV DWORD PTR DS:[6D5E04],EAX
+0041D965  |. 75 1B          JNZ SHORT StarCraf.0041D982
+0041D967  |. 6A 71          PUSH 71
+0041D969  |. FF15 14E24F00  CALL DWORD PTR DS:[<&KERNEL32.GetLastErr>; [GetLastError
+0041D96F  |. 8BD8           MOV EBX,EAX
+0041D971  |. 6A 65          PUSH 65
+0041D973  |. B8 E82C5000    MOV EAX,StarCraf.00502CE8                ;  ASCII "LoadLibrary"
+0041D978  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041D97D  |. E8 6E380000    CALL StarCraf.004211F0
+0041D982  |> 68 085F5000    PUSH StarCraf.00505F08                   ; /ProcNameOrOrdinal = "DirectDrawCreate"
+0041D987  |. 50             PUSH EAX                                 ; |hModule
+0041D988  |. FF15 44E24F00  CALL DWORD PTR DS:[<&KERNEL32.GetProcAdd>; \GetProcAddress
+0041D98E  |. 85C0           TEST EAX,EAX
+0041D990  |. 75 1B          JNZ SHORT StarCraf.0041D9AD
+0041D992  |. 6A 76          PUSH 76
+0041D994  |. FF15 14E24F00  CALL DWORD PTR DS:[<&KERNEL32.GetLastErr>; [GetLastError
+0041D99A  |. 8BD8           MOV EBX,EAX
+0041D99C  |. 6A 66          PUSH 66
+0041D99E  |. B8 C42C5000    MOV EAX,StarCraf.00502CC4                ;  ASCII "GetProcAddress"
+0041D9A3  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041D9A8  |. E8 43380000    CALL StarCraf.004211F0
+0041D9AD  |> 8A15 FC5D6D00  MOV DL,BYTE PTR DS:[6D5DFC]
+0041D9B3  |. 33C9           XOR ECX,ECX
+0041D9B5  |. 84D2           TEST DL,DL
+0041D9B7  |. 74 05          JE SHORT StarCraf.0041D9BE
+0041D9B9  |. B9 02000000    MOV ECX,2
+0041D9BE  |> 6A 00          PUSH 0                                   ;  IUnknown FAR* pUnkOuter
+0041D9C0  |. 68 085E6D00    PUSH StarCraf.006D5E08                   ;  LPDIRECTDRAW FAR* lplpDD
+0041D9C5  |. 51             PUSH ECX                                 ;  GUID FAR* lpGUID
+0041D9C6  |. FFD0           CALL EAX                                 ;  DirectDrawCreate()
+0041D9C8  |. 8BD8           MOV EBX,EAX                              ;  EBX = HResult of DirectDrawCreate
+0041D9CA  |. 81FB DE007688  CMP EBX,887600DE                         ;  "No DirectDraw Support" check
+0041D9D0  |. 75 13          JNZ SHORT StarCraf.0041D9E5              ;  should always jump on computers with DDraw
+0041D9D2  |. 6A 7C          PUSH 7C
+0041D9D4  |. 6A 6E          PUSH 6E
+0041D9D6  |. B8 085F5000    MOV EAX,StarCraf.00505F08                ;  ASCII "DirectDrawCreate"
+0041D9DB  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041D9E0  |. E8 0B380000    CALL StarCraf.004211F0
+0041D9E5  |> 85DB           TEST EBX,EBX
+0041D9E7  |. 74 13          JE SHORT StarCraf.0041D9FC
+0041D9E9  |. 6A 7D          PUSH 7D
+0041D9EB  |. 6A 66          PUSH 66
+0041D9ED  |. B8 085F5000    MOV EAX,StarCraf.00505F08                ;  ASCII "DirectDrawCreate"
+0041D9F2  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041D9F7  |. E8 F4370000    CALL StarCraf.004211F0
+0041D9FC  |> 8B15 B0BF5100  MOV EDX,DWORD PTR DS:[<SC HWND>]         ;  EDX = hwnd
+0041DA02  |. A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DA07  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable?
+0041DA09  |. 6A 13          PUSH 13                                  ;  flags = DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT | DDSCL_EXCLUSIVE
+0041DA0B  |. 52             PUSH EDX                                 ;  hwnd
+0041DA0C  |. 50             PUSH EAX                                 ;  lpDD (this)
+0041DA0D  |. FF51 50        CALL DWORD PTR DS:[ECX+50]               ;  lpDD->SetCooperativeLevel()
+0041DA10  |. 8BD8           MOV EBX,EAX
+0041DA12  |. 81FB 45027688  CMP EBX,88760245                         ;  Check for DDERR_EXCLUSIVEMODEALREADYSET
+0041DA18  |. 74 1A          JE SHORT StarCraf.0041DA34
+0041DA1A  |. 85DB           TEST EBX,EBX
+0041DA1C  |. 74 16          JE SHORT StarCraf.0041DA34
+0041DA1E  |. 68 94000000    PUSH 94
+0041DA23  |. 6A 66          PUSH 66
+0041DA25  |. B8 B02C5000    MOV EAX,StarCraf.00502CB0                ;  ASCII "SetCooperativeLevel"
+0041DA2A  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DA2F  |. E8 BC370000    CALL StarCraf.004211F0
+0041DA34  |> A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DA39  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable?
+0041DA3B  |. 6A 08          PUSH 8                                   ;  BitDepth = 8
+0041DA3D  |. 68 E0010000    PUSH 1E0                                 ;  Height = 0x1E0 = 480
+0041DA42  |. 68 80020000    PUSH 280                                 ;  Width = 0x280 = 640
+0041DA47  |. 50             PUSH EAX                                 ;  lpDD (this)
+0041DA48  |. FF51 54        CALL DWORD PTR DS:[ECX+54]               ;  lpDD->SetDisplayMode
+0041DA4B  |. 85C0           TEST EAX,EAX
+0041DA4D  |. 74 3C          JE SHORT StarCraf.0041DA8B
+0041DA4F  |. 8B35 68E34F00  MOV ESI,DWORD PTR DS:[<&USER32.GetSystem>
+0041DA55  |. 6A 00          PUSH 0                                   ; /Index = SM_CXSCREEN
+0041DA57  |. FFD6           CALL ESI                                 ; \GetSystemMetrics
+0041DA59  |. 6A 01          PUSH 1                                   ; /Index = SM_CYSCREEN
+0041DA5B  |. 8BF8           MOV EDI,EAX                              ; |
+0041DA5D  |. FFD6           CALL ESI                                 ; \GetSystemMetrics
+0041DA5F  |. 8B0D 085E6D00  MOV ECX,DWORD PTR DS:[6D5E08]            ;  ECX = lpDD
+0041DA65  |. 8B11           MOV EDX,DWORD PTR DS:[ECX]
+0041DA67  |. 6A 08          PUSH 8
+0041DA69  |. 50             PUSH EAX
+0041DA6A  |. 57             PUSH EDI
+0041DA6B  |. 51             PUSH ECX
+0041DA6C  |. FF52 54        CALL DWORD PTR DS:[EDX+54]
+0041DA6F  |. 8BD8           MOV EBX,EAX
+0041DA71  |. 85DB           TEST EBX,EBX
+0041DA73  |. 74 16          JE SHORT StarCraf.0041DA8B
+0041DA75  |. 68 A0000000    PUSH 0A0
+0041DA7A  |. 6A 67          PUSH 67
+0041DA7C  |. B8 F85E5000    MOV EAX,StarCraf.00505EF8                ;  ASCII "SetDisplayMode"
+0041DA81  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DA86  |. E8 65370000    CALL StarCraf.004211F0
+0041DA8B  |> 6A 00          PUSH 0                                   ;  IUnknown FAR *pUnkOuter = 0
+0041DA8D  |. 68 0C5E6D00    PUSH StarCraf.006D5E0C                   ;  LPDIRECTDRAWPALETTE FAR *lplpDDPalette
+0041DA92  |. 33C0           XOR EAX,EAX
+0041DA94  |. 8D95 94FBFFFF  LEA EDX,DWORD PTR SS:[EBP-46C]
+0041DA9A  |. 52             PUSH EDX                                 ;  LPPALETTEENTRY lpDDColorArray
+0041DA9B  |. B9 00010000    MOV ECX,100
+0041DAA0  |. 8DBD 94FBFFFF  LEA EDI,DWORD PTR SS:[EBP-46C]
+0041DAA6  |. F3:AB          REP STOS DWORD PTR ES:[EDI]
+0041DAA8  |. A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DAAD  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]
+0041DAAF  |. 6A 44          PUSH 44                                  ;  DWORD dwFlags = DDPCAPS_ALLOW256 | DDPCAPS_8BIT
+0041DAB1  |. 50             PUSH EAX                                 ;  lpDD (this)
+0041DAB2  |. FF51 14        CALL DWORD PTR DS:[ECX+14]               ;  lpDD->CreatePalette()
+0041DAB5  |. 8BD8           MOV EBX,EAX
+0041DAB7  |. 85DB           TEST EBX,EBX
+0041DAB9  |. 74 16          JE SHORT StarCraf.0041DAD1
+0041DABB  |. 68 B6000000    PUSH 0B6
+0041DAC0  |. 6A 66          PUSH 66
+0041DAC2  |. B8 E85E5000    MOV EAX,StarCraf.00505EE8                ;  ASCII "CreatePalette"
+0041DAC7  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DACC  |. E8 1F370000    CALL StarCraf.004211F0
+0041DAD1  |> 6A 00          PUSH 0                                   ;  IUnknown FAR* pUnkOuter = 0
+0041DAD3  |. 33C0           XOR EAX,EAX                              ;  value to bombard with
+0041DAD5  |. 68 005E6D00    PUSH StarCraf.006D5E00                   ;  LPDIRECTDRAWSURFACE FAR* lplpDDSurface
+0041DADA  |. B9 1B000000    MOV ECX,1B                               ;  repetitions = 0x1B = 27
+0041DADF  |. 8D7D 94        LEA EDI,DWORD PTR SS:[EBP-6C]            ;  EDI = DDSURFACEDESC
+0041DAE2  |. F3:AB          REP STOS DWORD PTR ES:[EDI]              ;  initialize DDSURFACEDESC with 0's
+0041DAE4  |. A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DAE9  |. 8D55 94        LEA EDX,DWORD PTR SS:[EBP-6C]            ;  EDX = &DDSURFACEDESC
+0041DAEC  |. BE 6C000000    MOV ESI,6C
+0041DAF1  |. 52             PUSH EDX                                 ;  LPDDSURFACEDESC lpDDSurfaceDesc
+0041DAF2  |. 8975 94        MOV DWORD PTR SS:[EBP-6C],ESI            ;  DDSurfaceDesc.dwSize = 0x6C
+0041DAF5  |. C745 98 010000>MOV DWORD PTR SS:[EBP-68],1              ;  DDSurfaceDesc.dwFlags = 1 = DDSD_CAPS
+0041DAFC  |. C745 FC 000200>MOV DWORD PTR SS:[EBP-4],200             ;  DDSurfaceDesc.ddsCaps = 0x200 = DDSCAPS_PRIMARYSURFACE
+0041DB03  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable
+0041DB05  |. 50             PUSH EAX                                 ;  lpDD (this)
+0041DB06  |. FF51 18        CALL DWORD PTR DS:[ECX+18]               ;  lpDD->CreateSurface()
+0041DB09  |. 8BD8           MOV EBX,EAX
+0041DB0B  |. 85DB           TEST EBX,EBX
+0041DB0D  |. 74 16          JE SHORT StarCraf.0041DB25
+0041DB0F  |. 68 C1000000    PUSH 0C1
+0041DB14  |. 6A 66          PUSH 66
+0041DB16  |. B8 D05E5000    MOV EAX,StarCraf.00505ED0                ;  ASCII "CreatePrimarySurface"
+0041DB1B  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DB20  |. E8 CB360000    CALL StarCraf.004211F0
+0041DB25  |> 8B15 0C5E6D00  MOV EDX,DWORD PTR DS:[6D5E0C]            ;  EDX = lpDDPalette
+0041DB2B  |. A1 005E6D00    MOV EAX,DWORD PTR DS:[6D5E00]            ;  EAX = lpDDSPrimary
+0041DB30  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable
+0041DB32  |. 52             PUSH EDX                                 ;  LPDIRECTDRAWPALETTE lpDDPalette
+0041DB33  |. 50             PUSH EAX                                 ;  lpDDSPrimary (this)
+0041DB34  |. FF51 7C        CALL DWORD PTR DS:[ECX+7C]               ;  lpDDSPrimary->SetPalette()
+0041DB37  |. 8BD8           MOV EBX,EAX
+0041DB39  |. 85DB           TEST EBX,EBX
+0041DB3B  |. 74 16          JE SHORT StarCraf.0041DB53
+0041DB3D  |. 68 CB000000    PUSH 0CB
+0041DB42  |. 6A 66          PUSH 66
+0041DB44  |. B8 C45E5000    MOV EAX,StarCraf.00505EC4                ;  ASCII "SetPalette"
+0041DB49  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DB4E  |. E8 9D360000    CALL StarCraf.004211F0
+0041DB53  |> A1 005E6D00    MOV EAX,DWORD PTR DS:[6D5E00]            ;  EAX = lpDDSPrimary
+0041DB58  |. 6A 00          PUSH 0                                   ;  HANDLE hEvent = NULL
+0041DB5A  |. 6A 01          PUSH 1                                   ;  DWORD dwFlags = 1 = DDLOCK_WAIT
+0041DB5C  |. 8D55 94        LEA EDX,DWORD PTR SS:[EBP-6C]            ;  EDX = lpDDSurfaceDesc
+0041DB5F  |. 52             PUSH EDX                                 ;  LPDDSURFACEDESC lpDDSurfaceDesc
+0041DB60  |. 6A 00          PUSH 0                                   ;  LPRECT lpDestRect = NULL (whole surface)
+0041DB62  |. 8975 94        MOV DWORD PTR SS:[EBP-6C],ESI            ;  dwSize = ESI = 0x6C
+0041DB65  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable
+0041DB67  |. 50             PUSH EAX                                 ;  lpDDSPrimary (this)
+0041DB68  |. FF51 64        CALL DWORD PTR DS:[ECX+64]               ;  lpDDSPrimary->Lock()
+0041DB6B  |. 85C0           TEST EAX,EAX
+0041DB6D  |. 74 5D          JE SHORT StarCraf.0041DBCC               ;  unless lock failed, jump
+0041DB6F  |. 6A 00          PUSH 0                                   ;  IUnknown FAR* pUnkOuter
+0041DB71  |. 33C0           XOR EAX,EAX
+0041DB73  |. 68 105E6D00    PUSH StarCraf.006D5E10                   ;  LPDIRECTDRAWSURFACE FAR* lplpDDSurface
+0041DB78  |. B9 1B000000    MOV ECX,1B
+0041DB7D  |. 8D7D 94        LEA EDI,DWORD PTR SS:[EBP-6C]            ;  EDI = SurfaceDesc
+0041DB80  |. F3:AB          REP STOS DWORD PTR ES:[EDI]              ;  set SurfaceDesc = 0
+0041DB82  |. A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DB87  |. 8D55 94        LEA EDX,DWORD PTR SS:[EBP-6C]            ;  EDX = SurfaceDesc
+0041DB8A  |. 52             PUSH EDX                                 ;  LPDDSURFACEDESC lpDDSurfaceDesc
+0041DB8B  |. 8975 94        MOV DWORD PTR SS:[EBP-6C],ESI            ;  SurfaceDesc.dwSize = 0x6C
+0041DB8E  |. C745 98 070000>MOV DWORD PTR SS:[EBP-68],7              ;  dwFlags = DDSD_WIDTH | DDSD_HEIGHT | DDSD_CAPS
+0041DB95  |. C745 FC 400800>MOV DWORD PTR SS:[EBP-4],840             ;  SurfaceDesc.ddsCaps = DDSCAPS_SYSTEMMEMORY | DDSCAPS_OFFSCREENPLAIN
+0041DB9C  |. C745 A0 800200>MOV DWORD PTR SS:[EBP-60],280            ;  SurfaceDesc.dwWidth = 640
+0041DBA3  |. C745 9C E00100>MOV DWORD PTR SS:[EBP-64],1E0            ;  SurfaceDesc.dwHeight = 480
+0041DBAA  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]               ;  ECX = VTable
+0041DBAC  |. 50             PUSH EAX                                 ;  lpDD (this)
+0041DBAD  |. FF51 18        CALL DWORD PTR DS:[ECX+18]               ;  lpDD->CreateSurface()
+0041DBB0  |. 8BD8           MOV EBX,EAX
+0041DBB2  |. 85DB           TEST EBX,EBX
+0041DBB4  |. 74 28          JE SHORT StarCraf.0041DBDE
+0041DBB6  |. 68 DC000000    PUSH 0DC
+0041DBBB  |. 6A 66          PUSH 66
+0041DBBD  |. B8 B05E5000    MOV EAX,StarCraf.00505EB0                ;  ASCII "CreateBackSurface"
+0041DBC2  |. B9 1C5F5000    MOV ECX,StarCraf.00505F1C                ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo_PC.cpp"
+0041DBC7  |. E8 24360000    CALL StarCraf.004211F0
+0041DBCC  |> 8B55 B8        MOV EDX,DWORD PTR SS:[EBP-48]
+0041DBCF  |. A1 005E6D00    MOV EAX,DWORD PTR DS:[6D5E00]            ;  EAX = lpDDSPrimary
+0041DBD4  |. 8B08           MOV ECX,DWORD PTR DS:[EAX]
+0041DBD6  |. 52             PUSH EDX
+0041DBD7  |. 50             PUSH EAX
+0041DBD8  |. FF91 80000000  CALL DWORD PTR DS:[ECX+80]
+0041DBDE  |> A1 0C5E6D00    MOV EAX,DWORD PTR DS:[6D5E0C]            ;  EAX = lpDDPalette
+0041DBE3  |. 8B0D 105E6D00  MOV ECX,DWORD PTR DS:[6D5E10]            ;  ECX = lpDDSSecondary
+0041DBE9  |. 8B15 005E6D00  MOV EDX,DWORD PTR DS:[6D5E00]            ;  EDX = lpDDSPrimary
+0041DBEF  |. 6A 00          PUSH 0                                   ;  void *obj7 = NULL
+0041DBF1  |. 50             PUSH EAX                                 ;  obj6 = lpDDPalette
+0041DBF2  |. A1 085E6D00    MOV EAX,DWORD PTR DS:[6D5E08]            ;  EAX = lpDD
+0041DBF7  |. 51             PUSH ECX                                 ;  obj5 = lpDDSecondary (may be/probably is null)
+0041DBF8  |. 8B0D B0BF5100  MOV ECX,DWORD PTR DS:[<SC HWND>]         ;  ECX = HWND
+0041DBFE  |. 6A 00          PUSH 0                                   ;  obj4 = 0/NULL
+0041DC00  |. 6A 00          PUSH 0                                   ;  obj3 = 0/NULL
+0041DC02  |. 52             PUSH EDX                                 ;  obj2 = lpDDSPrimary
+0041DC03  |. 50             PUSH EAX                                 ;  obj1 = lpDD
+0041DC04  |. 51             PUSH ECX                                 ;  a1 = SC HWND
+0041DC05  |. E8 1A42FFFF    CALL <JMP.&storm.#351>                   ;  SDrawManualInitialize(HWND a1, int obj1, int obj2, int obj3, int obj4, int obj5, int obj6, void *obj7)
+0041DC0A  |. 5F             POP EDI
+0041DC0B  |. 5E             POP ESI
+0041DC0C  |. 5B             POP EBX
+0041DC0D  |. 8BE5           MOV ESP,EBP
+0041DC0F  |. 5D             POP EBP
+0041DC10  \. C3             RETN
+=========================================================================================================================================================================
+0041DDD0   . 6A 00          PUSH 0                                   ;  defaultValue = 0
+0041DDD2   . 6A 37          PUSH 37                                  ;  logLine = 37
+0041DDD4   . 68 885E5000    PUSH StarCraf.00505E88                   ;  ASCII "Starcraft\SWAR\lang\gds\vidinimo.cpp"
+0041DDD9   . 68 00B00400    PUSH 4B000                               ;  amount = 0x4B000
+0041DDDE   . 66:C705 F0EF6C>MOV WORD PTR DS:[6CEFF0],280
+0041DDE7   . 66:C705 F2EF6C>MOV WORD PTR DS:[6CEFF2],1E0
+0041DDF0   . C705 F4EF6C00 >MOV DWORD PTR DS:[6CEFF4],0
+0041DDFA   . E8 6B22FFFF    CALL <JMP.&storm.#401>                   ;  void * SMemAlloc(int amount, char *logfilename, int logline, int defaultValue)
+0041DDFF   . A3 F4EF6C00    MOV DWORD PTR DS:[6CEFF4],EAX            ;  6CEFF4 = &PixelData
+0041DE04   . E8 27FBFFFF    CALL <StarCraf.InitDDraw()>
+0041DE09   . C705 F85D6D00 >MOV DWORD PTR DS:[6D5DF8],1
+0041DE13   . C3             RETN
+=========================================================================================================================================================================
+0041D420  /$ 55             PUSH EBP                                 ;  As far as I can tell, this function blits the updated parts of the screen through to the surface (keeping old data thats still "good")
+0041D421  |. 8BEC           MOV EBP,ESP
+0041D423  |. 83EC 08        SUB ESP,8
+0041D426  |. 6A 00          PUSH 0                                   ;  unused = 0
+0041D428  |. 8D45 F8        LEA EAX,DWORD PTR SS:[EBP-8]
+0041D42B  |. 50             PUSH EAX                                 ;  lpPitch = dynamic var
+0041D42C  |. 8D4D FC        LEA ECX,DWORD PTR SS:[EBP-4]
+0041D42F  |. 51             PUSH ECX                                 ;  lplpSurface = dynamic var
+0041D430  |. 6A 00          PUSH 0                                   ;  lpDestRect = NULL (whole surface)
+0041D432  |. 6A 00          PUSH 0                                   ;  surfaceNum = 0
+0041D434  |. E8 154AFFFF    CALL <JMP.&storm.#350>                   ;  SDrawLockSurface(int surfacenumber, RECT *lpDestRect, void **lplpSurface, int *lpPitch, int arg_unused)
+0041D439  |. 85C0           TEST EAX,EAX
+0041D43B  |. 74 2F          JE SHORT StarCraf.0041D46C
+0041D43D  |. 8B15 185E6D00  MOV EDX,DWORD PTR DS:[6D5E18]            ;  EDX = ? Maybe menu pixel data?
+0041D443  |. 8B45 F8        MOV EAX,DWORD PTR SS:[EBP-8]             ;  EAX = Pitch
+0041D446  |. 8B0D F4EF6C00  MOV ECX,DWORD PTR DS:[6CEFF4]            ;  ECX = lpPixelData
+0041D44C  |. 52             PUSH EDX                                 ;  a5 = [6D5E18]
+0041D44D  |. 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]             ;  EDX = lpSurface
+0041D450  |. 68 80020000    PUSH 280                                 ;  width = 640
+0041D455  |. 50             PUSH EAX                                 ;  a3 = Pitch
+0041D456  |. 51             PUSH ECX                                 ;  a2 = lpPixelData
+0041D457  |. 52             PUSH EDX                                 ;  a1 = lpSurface
+0041D458  |. E8 F749FFFF    CALL <JMP.&storm.#432>                   ;  STransBltUsingMask(int a1, int a2, int a3, int width, int a5)
+0041D45D  |. 8B45 FC        MOV EAX,DWORD PTR SS:[EBP-4]             ;  eax = lpSurface
+0041D460  |. 6A 00          PUSH 0
+0041D462  |. 6A 00          PUSH 0
+0041D464  |. 50             PUSH EAX
+0041D465  |. 6A 00          PUSH 0
+0041D467  |. E8 DC49FFFF    CALL <JMP.&storm.#356>                   ;  SDrawUnlockSurface(int surfacenumber, void *lpSurface, int zero1, int zero2)
+0041D46C  |> 8BE5           MOV ESP,EBP
+0041D46E  |. 5D             POP EBP
+0041D46F  \. C3             RETN
+=========================================================================================================================================================================
+004172F0  /$ 55             PUSH EBP                                 ;  Draws/updates the menu area
+004172F1  |. 8BEC           MOV EBP,ESP
+004172F3  |. 83EC 1C        SUB ESP,1C
+004172F6  |. 53             PUSH EBX
+004172F7  |. 56             PUSH ESI
+004172F8  |. 8BF1           MOV ESI,ECX
+004172FA  |. 8B16           MOV EDX,DWORD PTR DS:[ESI]
+004172FC  |. 8B4E 04        MOV ECX,DWORD PTR DS:[ESI+4]
+004172FF  |. 8BD8           MOV EBX,EAX
+00417301  |. 8B46 08        MOV EAX,DWORD PTR DS:[ESI+8]
+00417304  |. 2BC2           SUB EAX,EDX
+00417306  |. 8B56 0C        MOV EDX,DWORD PTR DS:[ESI+C]
+00417309  |. 2BD1           SUB EDX,ECX
+0041730B  |. 8B4F 08        MOV ECX,DWORD PTR DS:[EDI+8]
+0041730E  |. 2B0F           SUB ECX,DWORD PTR DS:[EDI]
+00417310  |. 8945 F8        MOV DWORD PTR SS:[EBP-8],EAX
+00417313  |. 3BC1           CMP EAX,ECX
+00417315  |. 7C 03          JL SHORT StarCraf.0041731A
+00417317  |. 894D F8        MOV DWORD PTR SS:[EBP-8],ECX
+0041731A  |> 8B47 0C        MOV EAX,DWORD PTR DS:[EDI+C]
+0041731D  |. 2B47 04        SUB EAX,DWORD PTR DS:[EDI+4]
+00417320  |. 3BD0           CMP EDX,EAX
+00417322  |. 8955 FC        MOV DWORD PTR SS:[EBP-4],EDX
+00417325  |. 7C 03          JL SHORT StarCraf.0041732A
+00417327  |. 8945 FC        MOV DWORD PTR SS:[EBP-4],EAX
+0041732A  |> A1 A0056D00    MOV EAX,DWORD PTR DS:[6D05A0]
+0041732F  |. 85C0           TEST EAX,EAX
+00417331  |. 74 26          JE SHORT StarCraf.00417359
+00417333  |. 6A 00          PUSH 0                                   ;  unused = 0
+00417335  |. 8D45 F4        LEA EAX,DWORD PTR SS:[EBP-C]
+00417338  |. 50             PUSH EAX                                 ;  lpPitch = dynamic var
+00417339  |. 8D4D F0        LEA ECX,DWORD PTR SS:[EBP-10]
+0041733C  |. 51             PUSH ECX                                 ;  lplpSurface = dynamic var
+0041733D  |. 6A 00          PUSH 0                                   ;  lpDestRect = NULL (whole surface)
+0041733F  |. 6A 00          PUSH 0                                   ;  surfacenumber = 0 (first/only surface)
+00417341  |. E8 08ABFFFF    CALL <JMP.&storm.#350>                   ;  SDrawLockSurface(int surfacenumber, RECT *lpDestRect, void **lplpSurface, int *lpPitch, int arg_unused)
+00417346  |. 85C0           TEST EAX,EAX
+00417348  |. 8B4D F4        MOV ECX,DWORD PTR SS:[EBP-C]             ;  ECX = Pitch
+0041734B  |. 894D EC        MOV DWORD PTR SS:[EBP-14],ECX            ;  dynamic var = Pitch
+0041734E  |. 0F84 1E010000  JE StarCraf.00417472
+00417354  |. 8B45 F0        MOV EAX,DWORD PTR SS:[EBP-10]            ;  EAX = lpSurface
+00417357  |. EB 0C          JMP SHORT StarCraf.00417365
+00417359  |> 8B0D A8F46C00  MOV ECX,DWORD PTR DS:[6CF4A8]            ;  StarCraf.006CEFF0
+0041735F  |. 8B41 04        MOV EAX,DWORD PTR DS:[ECX+4]
+00417362  |. 0FBF09         MOVSX ECX,WORD PTR DS:[ECX]
+00417365  |> 8B55 F8        MOV EDX,DWORD PTR SS:[EBP-8]             ;  EDX = dynamic var (ScreenWidth?)
+00417368  |. 85D2           TEST EDX,EDX
+0041736A  |. 8945 F4        MOV DWORD PTR SS:[EBP-C],EAX             ;  dynamic var = EAX (lpSurface)
+0041736D  |. 0F8E E8000000  JLE StarCraf.0041745B
+00417373  |. 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]             ;  EDX = dynamic var (0x1E here (0d30))
+00417376  |. 85D2           TEST EDX,EDX
+00417378  |. 0F8E DD000000  JLE StarCraf.0041745B
+0041737E  |. 8B55 0C        MOV EDX,DWORD PTR SS:[EBP+C]             ;  EDX = second arg
+00417381  |. 83FA 05        CMP EDX,5                                ;  Switch (cases 0..5)
+00417384  |. 0F87 D1000000  JA StarCraf.0041745B
+0041738A  |. FF2495 7C74410>JMP DWORD PTR DS:[EDX*4+41747C]
+00417391  |> 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]             ;  Case 0 of switch 00417381
+00417394  |. 68 2000CC00    PUSH 0CC0020                             ;  maxIterations = very large number
+00417399  |. 6A 00          PUSH 0                                   ;  a7 = 0
+0041739B  |. 53             PUSH EBX                                 ;  Pitch = EBX (0x90 here)
+0041739C  |. 51             PUSH ECX                                 ;  destWidth = ECX (280 here)
+0041739D  |. 52             PUSH EDX                                 ;  srcHeight = EDX (0x1E here)
+0041739E  |. 8B55 F8        MOV EDX,DWORD PTR SS:[EBP-8]             ;  EDX = dynamic var
+004173A1  |. 52             PUSH EDX                                 ;  srcWidth = EDX (0x90 here)
+004173A2  |. 8B56 04        MOV EDX,DWORD PTR DS:[ESI+4]
+004173A5  |. 0FAFD3         IMUL EDX,EBX
+004173A8  |. 8B1E           MOV EBX,DWORD PTR DS:[ESI]
+004173AA  |. 8B75 08        MOV ESI,DWORD PTR SS:[EBP+8]
+004173AD  |. 03D3           ADD EDX,EBX
+004173AF  |. 03D6           ADD EDX,ESI                              ;  gets the pixel location (I think)
+004173B1  |. 8B37           MOV ESI,DWORD PTR DS:[EDI]               ;  ESI = x?
+004173B3  |. 52             PUSH EDX                                 ;  srcSurface = EDX (pixel location)
+004173B4  |. 8B57 04        MOV EDX,DWORD PTR DS:[EDI+4]             ;  EDX = y
+004173B7  |. 0FAFD1         IMUL EDX,ECX                             ;  EDX = y * ScreenWidth
+004173BA  |. 03D6           ADD EDX,ESI                              ;  EDX = (y * ScreenWidth) + x
+004173BC  |. 03D0           ADD EDX,EAX                              ;  EDX += lpSurface
+004173BE  |. 52             PUSH EDX                                 ;  destSurface = EDX
+004173BF  |. E8 1E8DFFFF    CALL <JMP.&storm.#313>                   ;  SBltROP3(dont think params are correct)
+004173C4  |. E9 92000000    JMP StarCraf.0041745B
+004173C9  |> 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]             ;  Case 1 of switch 00417381
+004173CC  |. 52             PUSH EDX                                 ; /Arg3
+004173CD  |. 8B56 04        MOV EDX,DWORD PTR DS:[ESI+4]             ; |
+004173D0  |. 0FAFD3         IMUL EDX,EBX                             ; |
+004173D3  |. 0316           ADD EDX,DWORD PTR DS:[ESI]               ; |
+004173D5  |. 0355 08        ADD EDX,DWORD PTR SS:[EBP+8]             ; |
+004173D8  |. 8B37           MOV ESI,DWORD PTR DS:[EDI]               ; |
+004173DA  |. 52             PUSH EDX                                 ; |Arg2
+004173DB  |. 8B57 04        MOV EDX,DWORD PTR DS:[EDI+4]             ; |
+004173DE  |. 0FAFD1         IMUL EDX,ECX                             ; |
+004173E1  |. 03D6           ADD EDX,ESI                              ; |
+004173E3  |. 03D0           ADD EDX,EAX                              ; |
+004173E5  |. 52             PUSH EDX                                 ; |Arg1
+004173E6  |. 8B55 F8        MOV EDX,DWORD PTR SS:[EBP-8]             ; |
+004173E9  |. 8BC3           MOV EAX,EBX                              ; |
+004173EB  |. E8 E0FAFFFF    CALL StarCraf.00416ED0                   ; \StarCraf.00416ED0
+004173F0  |. EB 69          JMP SHORT StarCraf.0041745B
+004173F2  |> 8B55 10        MOV EDX,DWORD PTR SS:[EBP+10]            ;  Case 3 of switch 00417381
+004173F5  |. 52             PUSH EDX                                 ; /Arg4
+004173F6  |. 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]             ; |
+004173F9  |. 52             PUSH EDX                                 ; |Arg3
+004173FA  |. 8B56 04        MOV EDX,DWORD PTR DS:[ESI+4]             ; |
+004173FD  |. 0FAFD3         IMUL EDX,EBX                             ; |
+00417400  |. 0316           ADD EDX,DWORD PTR DS:[ESI]               ; |
+00417402  |. 0355 08        ADD EDX,DWORD PTR SS:[EBP+8]             ; |
+00417405  |. 8B37           MOV ESI,DWORD PTR DS:[EDI]               ; |
+00417407  |. 52             PUSH EDX                                 ; |Arg2
+00417408  |. 8B57 04        MOV EDX,DWORD PTR DS:[EDI+4]             ; |
+0041740B  |. 0FAFD1         IMUL EDX,ECX                             ; |
+0041740E  |. 03D6           ADD EDX,ESI                              ; |
+00417410  |. 03D0           ADD EDX,EAX                              ; |
+00417412  |. 52             PUSH EDX                                 ; |Arg1
+00417413  |. 8B55 F8        MOV EDX,DWORD PTR SS:[EBP-8]             ; |
+00417416  |. 8BC3           MOV EAX,EBX                              ; |
+00417418  |. E8 13FDFFFF    CALL StarCraf.00417130                   ; \StarCraf.00417130
+0041741D  |. EB 3C          JMP SHORT StarCraf.0041745B
+0041741F  |> 33C0           XOR EAX,EAX                              ;  Cases 4,5 of switch 00417381
+00417421  |. 83FA 05        CMP EDX,5
+00417424  |. 8B55 FC        MOV EDX,DWORD PTR SS:[EBP-4]
+00417427  |. 53             PUSH EBX
+00417428  |. 0F94C0         SETE AL
+0041742B  |. 51             PUSH ECX
+0041742C  |. 52             PUSH EDX
+0041742D  |. 8B56 04        MOV EDX,DWORD PTR DS:[ESI+4]
+00417430  |. 0FAFD3         IMUL EDX,EBX
+00417433  |. 8B1E           MOV EBX,DWORD PTR DS:[ESI]
+00417435  |. 8B37           MOV ESI,DWORD PTR DS:[EDI]
+00417437  |. A3 B85E6D00    MOV DWORD PTR DS:[6D5EB8],EAX
+0041743C  |. 8B45 F8        MOV EAX,DWORD PTR SS:[EBP-8]
+0041743F  |. 50             PUSH EAX
+00417440  |. 8B45 08        MOV EAX,DWORD PTR SS:[EBP+8]
+00417443  |. 03D3           ADD EDX,EBX
+00417445  |. 03D0           ADD EDX,EAX
+00417447  |. 8B47 04        MOV EAX,DWORD PTR DS:[EDI+4]
+0041744A  |. 0FAFC1         IMUL EAX,ECX
+0041744D  |. 52             PUSH EDX
+0041744E  |. 8B55 F4        MOV EDX,DWORD PTR SS:[EBP-C]
+00417451  |. 03C6           ADD EAX,ESI
+00417453  |. 03C2           ADD EAX,EDX
+00417455  |. 50             PUSH EAX
+00417456  |. E8 D5FAFFFF    CALL StarCraf.00416F30
+0041745B  |> A1 A0056D00    MOV EAX,DWORD PTR DS:[6D05A0]            ;  Default case of switch 00417381
+00417460  |. 85C0           TEST EAX,EAX
+00417462  |. 74 0E          JE SHORT StarCraf.00417472
+00417464  |. 8B4D F0        MOV ECX,DWORD PTR SS:[EBP-10]
+00417467  |. 57             PUSH EDI
+00417468  |. 6A 01          PUSH 1
+0041746A  |. 51             PUSH ECX
+0041746B  |. 6A 00          PUSH 0
+0041746D  |. E8 D6A9FFFF    CALL <JMP.&storm.#356>
+00417472  |> 5E             POP ESI
+00417473  |. 5B             POP EBX
+00417474  |. 8BE5           MOV ESP,EBP
+00417476  |. 5D             POP EBP
+00417477  \. C2 0C00        RETN 0C
+0041747A     8BFF           MOV EDI,EDI
+0041747C   . 91734100       DD StarCraf.00417391                     ;  Switch table used at 0041738A
+00417480   . C9734100       DD StarCraf.004173C9
+00417484   . 5B744100       DD StarCraf.0041745B
+00417488   . F2734100       DD StarCraf.004173F2
+0041748C   . 1F744100       DD StarCraf.0041741F
+00417490   . 1F744100       DD StarCraf.0041741F
+========================================================================================================================================================================
+004E1D20 >/$ 55             PUSH EBP                                 ;  Params: int x, int y, int w, int h, [006CF4AC] = byte color
+004E1D21  |. 8BEC           MOV EBP,ESP
+004E1D23  |. 0FB745 14      MOVZX EAX,WORD PTR SS:[EBP+14]           ;  EAX = height
+004E1D27  |. 56             PUSH ESI
+004E1D28  |. 33F6           XOR ESI,ESI
+004E1D2A  |. 85C0           TEST EAX,EAX                             ;  if(height == 0)
+004E1D2C  |. 7E 54          JLE SHORT StarCraf.004E1D82              ;  { return }
+004E1D2E  |. 53             PUSH EBX
+004E1D2F  |. 57             PUSH EDI
+004E1D30  |> 8B15 A8F46C00  /MOV EDX,DWORD PTR DS:[6CF4A8]           ;  pointer to drawing info structure?
+004E1D36  |. 0FBF1A         |MOVSX EBX,WORD PTR DS:[EDX]             ;  EBX = (WORD)[EDX] = bytesPerRow
+004E1D39  |. 8B7D 0C        |MOV EDI,DWORD PTR SS:[EBP+C]            ;  EDI = y
+004E1D3C  |. 0FB605 ACF46C0>|MOVZX EAX,BYTE PTR DS:[<BoxColor>]      ;  EAX = color
+004E1D43  |. 03FE           |ADD EDI,ESI                             ;  EDI = y + rowNum
+004E1D45  |. 0FBFFF         |MOVSX EDI,DI                            ;  EDI = (Word)EDI
+004E1D48  |. 0FAFFB         |IMUL EDI,EBX                            ;  EDI = (y+rowNum) * bytesPerRow
+004E1D4B  |. 8B5A 04        |MOV EBX,DWORD PTR DS:[EDX+4]            ;  EBX = lpPixelData
+004E1D4E  |. 0FBF55 08      |MOVSX EDX,WORD PTR SS:[EBP+8]           ;  EDX = x
+004E1D52  |. 0FB74D 10      |MOVZX ECX,WORD PTR SS:[EBP+10]          ;  ECX = width
+004E1D56  |. 03FB           |ADD EDI,EBX                             ;  EDI = EDI + lpPixelData
+004E1D58  |. 8AD8           |MOV BL,AL                               ;  BL = color
+004E1D5A  |. 8AFB           |MOV BH,BL                               ;  BH = color
+004E1D5C  |. 03FA           |ADD EDI,EDX                             ;  EDI = ((y+rowNum) * bytesPerRow) + lpPixelData + x
+004E1D5E  |. 8BD1           |MOV EDX,ECX                             ;  EDX = width
+004E1D60  |. C1E9 02        |SHR ECX,2                               ;  ECX = width / 4
+004E1D63  |. 8BC3           |MOV EAX,EBX                             ;  EAX = <junkx16bits><color><color>
+004E1D65  |. C1E0 10        |SHL EAX,10                              ;  EAX = <color><color><16 zeros>
+004E1D68  |. 66:8BC3        |MOV AX,BX                               ;  EAX = <color><color><color><color>
+004E1D6B  |. F3:AB          |REP STOS DWORD PTR ES:[EDI]             ;  Write out the whole row of color
+004E1D6D  |. 8BCA           |MOV ECX,EDX                             ;  ECX = width
+004E1D6F  |. 83E1 03        |AND ECX,3                               ;  ECX = ECX & 3 (IE: width % 4 != 0)
+004E1D72  |. 46             |INC ESI                                 ;  rowNum++
+004E1D73  |. F3:AA          |REP STOS BYTE PTR ES:[EDI]              ;  Draw over extra pixels on right edge
+004E1D75  |. 0FB745 14      |MOVZX EAX,WORD PTR SS:[EBP+14]          ;  EAX = Height
+004E1D79  |. 0FBFCE         |MOVSX ECX,SI                            ;  ECX = (Word)rowNum
+004E1D7C  |. 3BC8           |CMP ECX,EAX                             ;  if(rowNum < Height)
+004E1D7E  |.^7C B0          \JL SHORT StarCraf.004E1D30              ;  repeat ^^^
+004E1D80  |. 5F             POP EDI
+004E1D81  |. 5B             POP EBX
+004E1D82  |> 5E             POP ESI
+004E1D83  |. 5D             POP EBP
+004E1D84  \. C2 1000        RETN 10
+========================================================================================================================================================================
+
+Currently debugging: 004EF515  |. 6A 00          PUSH 0                                   ; /Arg3 = 00000000

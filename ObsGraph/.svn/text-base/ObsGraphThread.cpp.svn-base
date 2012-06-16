@@ -1,0 +1,137 @@
+#include "ObsGraphThread.h"
+#include "Patcher.h"
+#include "BWAddresses.h"
+#include "BWUtil.h"
+
+void TempDrawHook() {
+	// FIXME: get rid of this function and move hooks to another file
+	//BWDrawTransparentBox(20,20,40,40,188);
+	//BWFormatTextR(BWTF_NORMAL);
+	//BWDrawText(20,20, "Oh hi there");
+	
+	int x = 0;
+	int y = 0;
+	int w = 640;
+	int h = 400;
+	byte midclr = 18;
+
+	
+	bool bDraw = true;;
+	for(int i = y; i < y+h; i++) {
+		for(int z = x; z < x+w; z++) {
+			if(bDraw)
+				BWDrawPixel(z,i,midclr);
+			bDraw = !bDraw;
+		}
+		if(w % 2 == 0)
+			bDraw = !bDraw;
+	}
+	
+}
+
+ObsGraphThread::ObsGraphThread() {}
+
+/*
+constructor TStartrisThread.Create(CreateSuspended: Boolean);
+begin
+  inherited Create(CreateSuspended);
+  AllocConsole;
+
+  SCWnd := FindWindow(nil,'Brood War');
+
+  WriteLn('Loading Fonts...');
+  LoadFont('ObsImages\8x12font.jpg',8,12,0);
+  WriteLn('Fonts loaded.');
+
+  WriteLn('Creating Hotkey Thread...');
+  FHotkeyThread := THotkeysThread.Create(True);
+  FHotkeyThread.OnHotkey := HotkeyEvent;
+  FHotkeyThread.AddKey(VK_F6,2);
+  FHotkeyThread.AddKey(VK_F7,2);
+  FHotkeyThread.AddKey(VK_F8,2);
+  FHotkeyThread.AddKey(Ord('I'));
+  FHotkeyThread.AddKey(Ord('J'));
+  FHotkeyThread.AddKey(Ord('K'));
+  FHotkeyThread.AddKey(Ord('L'));
+  FHotkeyThread.AddKey(VK_F5,2);
+
+  WriteLn('Hotkey thread initialized.');
+  SndNum := 1;
+
+  // Add patches
+  AddPatch(Offsets.HOOK_Draw,Cardinal(@DrawHook));
+  AddPatchedMem(Offsets.PTCH_TextRefresh1,[$90,$90]);
+  AddPatchedMem(Offsets.PTCH_TextRefresh2,[$EB,$04]);
+
+  // Create our game window
+  GameWindow := TGameWindow.Create(200,34,GAME_WIDTH,GAME_HEIGHT,
+                                  'Startris: Brood Blox',0,True,True);
+  TestBlock := TTestBlock.Create;
+  TestBlock.XPos := 0;
+  TestBlock.YPos := 0;
+  TestBlock.XVel := 1;
+  TestBlock.YVel := 1;
+  GameWindow.AddChild(TestBlock);
+  //GameWindow := TGameWindow.Create(200,34,50,50,'Game Window!',0,True,True);
+end;
+*/
+void ObsGraphThread::Setup()
+{
+	patcher = new Patcher();
+	
+	patcher->AddPatch(HOOK_DRAW, (DWORD)&TempDrawHook);
+	const unsigned short refreshMem1 = 0x9090;
+	const unsigned short refreshMem2 = 0x04EB;
+	patcher->AddPatchedMem(PTCH_TEXTREFRESH1, (byte*)&refreshMem1, 2);
+	patcher->AddPatchedMem(PTCH_TEXTREFRESH2, (byte*)&refreshMem2, 2);
+}
+
+/*
+procedure TStartrisThread.Execute;
+begin
+  FHotkeyThread.Resume;
+  HijackWndProc;
+
+  while not Terminated do
+  begin
+    if (IsInGame) and (not Patched) then
+    begin
+      Patch;
+    end
+    else if (not IsInGame) and (Patched) then
+      Unpatch;
+
+    if IsInGame then
+    begin
+      UpdateLoop;
+      Sleep(TICK_TIME);
+    end
+    else
+      Sleep(100);
+  end;
+
+  FreeConsole;
+  Images.Free;
+  UnHijackWndProc;
+  if Terminated then
+    exit;
+end;
+*/
+void ObsGraphThread::Execute(void* arg)//FIXME: write this
+{
+	bool ingame = false;
+	while(!isTerminated()) {
+		if(!ingame && IsInGame()) {
+			ingame = true;
+			patcher->Patch();
+		}
+		else if(ingame && !IsInGame()) {
+			ingame = false;
+			patcher->Unpatch();
+		}
+		
+		Sleep(150);
+	}
+	
+	delete patcher;
+}
